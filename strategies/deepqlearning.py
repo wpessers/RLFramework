@@ -77,8 +77,3 @@ class DeepQLearning(QLearnStrategy):
             return choice(np.arange(0, self.environment.action_space.n, 1))
         else:
             return np.argmax(self.model_1.predict(state.reshape((1, -1))))
-
-
-            # user_details = [self.model_1.predict() for i in range(self.environment.action_space.n)]
-            # np.zeros(self.environment.action_space.n).map(index => )
-
