@@ -5,6 +5,8 @@ from percept import Percept
 
 class MDP:
     def __init__(self, states_amount, actions_amount):
+        self.states_amount = states_amount
+        self.actions_amount = actions_amount
         self.Rtsa = np.zeros((states_amount, states_amount, actions_amount), dtype=float)
         self.Nsa = np.zeros((states_amount, actions_amount), dtype=int)
         self.Ntsa = np.zeros((states_amount, states_amount, actions_amount), dtype=int)

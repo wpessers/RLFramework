@@ -1,8 +1,8 @@
 import gym
+import numpy as np
 
 from agent import Agent
 from environment import Environment
-from percept import Percept
 from strategies.montecarlostrategy import MonteCarloStrategy
 from strategies.nstepqlearnstrategy import NStepQLearnStrategy
 from strategies.qlearnstrategy import QLearnStrategy
