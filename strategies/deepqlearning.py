@@ -59,7 +59,6 @@ class DeepQLearning(QLearnStrategy):
         for percept in percept_sample:
             state = to_categorical(percept.current_state, num_classes=self.environment.observation_space.n)
             next_state = to_categorical(percept.next_state, num_classes=self.environment.observation_space.n)
-            q = self.model_1.predict(state.reshape((1, -1)))
             q_ster = np.amax(self.model_2.predict(next_state.reshape((1, -1))))
             if not percept.done:
                 self.qsa[percept.current_state, percept.action] = (percept.reward + self.discount_factor * q_ster)
