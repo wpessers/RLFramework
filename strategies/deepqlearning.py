@@ -74,7 +74,7 @@ class DeepQLearning(QLearnStrategy):
 
     def next_action(self, current_state: int):
         state = to_categorical(current_state, num_classes=self.environment.observation_space.n)
-        if random() > self.expl_prob:
+        if random() < self.expl_prob:
             return choice(np.arange(0, self.environment.action_space.n, 1))
         else:
             return np.argmax(self.model_1.predict(state.reshape((1, -1))))
