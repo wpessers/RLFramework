@@ -18,7 +18,7 @@ class MDP:
         self.Ntsa[percept.next_state, percept.current_state, percept.action] += 1
 
         for action in np.nditer(self.Ptsa[percept.next_state, percept.current_state]):
-            if self.Nsa[percept.current_state, action] != 0:
-                self.Ptsa[percept.next_state, percept.current_state, action] = \
-                    self.Ntsa[percept.next_state, percept.current_state, action] / self.Nsa[
-                        percept.current_state, action]
+            if self.Nsa[percept.current_state, int(action)] != 0:
+                self.Ptsa[percept.next_state, percept.current_state, int(action)] = \
+                    self.Ntsa[percept.next_state, percept.current_state, int(action)] / self.Nsa[
+                        percept.current_state, int(action)]

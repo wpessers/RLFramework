@@ -12,7 +12,8 @@ class QLearnStrategy(LearningStrategy):
     def __init__(self, learning_rate: float, discount_factor: float, expl_prob_max: float, expl_prob_min: float,
                  expl_decay_rate: float, environment: Environment):
         super().__init__(learning_rate, discount_factor, expl_prob_max, expl_prob_min, expl_decay_rate, environment)
-        self.qsa = np.zeros((environment.observation_space.n, environment.action_space.n))
+        #TODO: FECKING OBSERVATION SPACE
+        self.qsa = np.zeros((environment.observation_space.shape[0], environment.action_space.n))
 
     def evaluate(self, percept: Percept):
         self.qsa[percept.current_state, percept.action] = \

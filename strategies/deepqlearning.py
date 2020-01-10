@@ -18,8 +18,8 @@ class DeepQLearning(QLearnStrategy):
                  learning_rate: float, discount_factor: float, expl_prob_max: float, expl_prob_min: float,
                  expl_decay_rate: float, environment: Environment):
         super().__init__(learning_rate, discount_factor, expl_prob_max, expl_prob_min, expl_decay_rate, environment)
-        self.model_1 = self.init_model(self.environment.observation_space.n, self.environment.action_space.n)
-        self.model_2 = self.init_model(self.environment.observation_space.n, self.environment.action_space.n)
+        self.model_1 = self.init_model(self.environment.observation_space.shape[0], self.environment.action_space.n)
+        self.model_2 = self.init_model(self.environment.observation_space.shape[0], self.environment.action_space.n)
         self.batch_size = batch_size
         self.update_interval = update_interval
         self.buffered_percepts_list = []
@@ -57,8 +57,8 @@ class DeepQLearning(QLearnStrategy):
     def build_training_set(self, percept_sample: List[Percept]):
         training_set = []
         for percept in percept_sample:
-            state = to_categorical(percept.current_state, num_classes=self.environment.observation_space.n)
-            next_state = to_categorical(percept.next_state, num_classes=self.environment.observation_space.n)
+            state = to_categorical(percept.current_state, num_classes=self.environment.observation_space.shape[0])
+            next_state = to_categorical(percept.next_state, num_classes=self.environment.observation_space.shape[0])
             q_ster = np.amax(self.model_2.predict(next_state.reshape((1, -1))))
             if not percept.done:
                 self.qsa[percept.current_state, percept.action] = (percept.reward + self.discount_factor * q_ster)
@@ -72,7 +72,7 @@ class DeepQLearning(QLearnStrategy):
             self.model_1.fit(training_pair[0].reshape((1, -1)), training_pair[1].reshape((1, -1)), verbose=0)
 
     def next_action(self, current_state: int):
-        state = to_categorical(current_state, num_classes=self.environment.observation_space.n)
+        state = to_categorical(current_state, num_classes=self.environment.observation_space.shape[0])
         if random() < self.expl_prob:
             return choice(np.arange(0, self.environment.action_space.n, 1))
         else:
