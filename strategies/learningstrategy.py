@@ -16,9 +16,8 @@ class LearningStrategy(ABC):
         self.expl_prob_min = expl_prob_min  # epsilon min
         self.expl_decay_rate = expl_decay_rate  # lambda
         self.environment = environment
-        #TODO: FECKING OBSERVATION SPACE
-        self.policy = np.full((environment.observation_space.shape[0], environment.action_space.n),
-                              1 / environment.action_space.n)
+        self.policy = np.full((environment.observation_space_size, environment.action_space_size),
+                              1 / environment.action_space_size)
 
     def learn(self, percept: Percept, episode_count):
         self.evaluate(percept)

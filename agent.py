@@ -5,7 +5,7 @@ from strategies.learningstrategy import LearningStrategy
 
 
 class Agent:
-    def __init__(self, environment: Environment, strategy):
+    def __init__(self, environment: Environment, strategy: LearningStrategy):
         self.environment = environment
         self.strategy = strategy
 
@@ -48,3 +48,33 @@ class Agent:
             episode_count += 1
 
         Functions.plot_success_rate(x_vals, y_vals)
+
+
+    # def learn(self, n_episodes: int):
+    #     episode_count = 0
+    #     scores = []
+    #     while episode_count < n_episodes:
+    #         current_state = self.environment.reset()
+    #         # self.environment.render()
+    #         score_count = 0
+    #         percept = Percept(0, 0, 0, 0, False)
+    #         while not percept.done:
+    #             # self.environment.render()
+    #             action = self.strategy.next_action(current_state)
+    #             next_state, reward, done = self.environment.step(action)
+    #             percept = Percept(current_state, action, next_state, reward, done)
+    #             self.strategy.learn(percept, episode_count)
+    #             current_state = percept.next_state
+    #             score_count += percept.reward
+    #
+    #         # print("Agent died, got score of: " + str(score_count))
+    #         scores.append(score_count)
+    #         print(score_count)
+    #         if episode_count > 0 and episode_count % 10 == 0:
+    #
+    #             print("\nEpisode: " + str(episode_count))
+    #             print("Exploration probability: " + str(self.strategy.expl_prob))
+    #             print("Average score:" + str(np.mean(scores)))
+    #             scores.clear()
+    #
+    #         episode_count += 1
