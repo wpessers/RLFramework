@@ -14,7 +14,8 @@ from strategies.qlearnstrategy import QLearnStrategy
 from strategies.valueiteration import ValueIteration
 
 
-def main():
+def run_frozenlake():
+    # region Frozenlake
     env = gym.make("FrozenLake-v0")
     # env = gym.make("CartPole-v0")
     environment = Environment(env)
@@ -26,53 +27,42 @@ def main():
                                            steps_amount=10)
     montecarlostrat = MonteCarloStrategy(learning_rate=0.8, expl_decay_rate=0.01, discount_factor=0.95, expl_prob_max=1,
                                          expl_prob_min=0.0001, environment=environment)
+    deepqlearning = DeepQLearning(batch_size=32, update_interval=8, learning_rate=0.01, expl_decay_rate=0.01,
+                                  discount_factor=0.2, expl_prob_max=1,
+                                  expl_prob_min=0.0001, environment=environment, max_experience_size=100)
+    doubledeepqlearning = DoubleDeepQLearning(batch_size=32, update_interval=8, learning_rate=0.001,
+                                              expl_decay_rate=0.995,
+                                              discount_factor=0.95, expl_prob_max=1,
+                                              expl_prob_min=0.0000001, environment=environment)
 
-    # deepqlearning = DeepQLearning(batch_size=32, update_interval=8, learning_rate=0.001, expl_decay_rate=0.995,
-    #                               discount_factor=0.95, expl_prob_max=1,
-    #                               expl_prob_min=0.0000001, environment=environment)
-    deepqlearning = DeepQLearning(batch_size=5, update_interval=10, learning_rate=0.8, expl_decay_rate=0.01,
-                                  discount_factor=0.95, expl_prob_max=1,
-                                  expl_prob_min=0.0000001, environment=environment, max_experience_size=10)
-    doubledeepqlearning = DoubleDeepQLearning(batch_size=32, update_interval=8, learning_rate=0.001, expl_decay_rate=0.995,
-                                  discount_factor=0.95, expl_prob_max=1,
-                                  expl_prob_min=0.0000001, environment=environment)
-
-    agent = Agent(environment, deepqlearning)
-    agent.learn(1001)
-
-    '''
-    # region frozenlake
-    env_fl = gym.make("FrozenLake-v0")
-    frozen_lake = Environment(env_fl)
-    qlearnstrat = QLearnStrategy(learning_rate=0.85, expl_decay_rate=0.01, discount_factor=0.95, expl_prob_max=1,
-                                 expl_prob_min=0.0001, environment=frozen_lake)
-    nstepqlearnstrat = NStepQLearnStrategy(learning_rate=0.8, expl_decay_rate=0.01, discount_factor=0.95,
-                                           expl_prob_max=1, expl_prob_min=0.0001, environment=frozen_lake,
-                                           steps_amount=10)
-    montecarlostrat = MonteCarloStrategy(learning_rate=0.8, expl_decay_rate=0.01, discount_factor=0.95, expl_prob_max=1,
-                                         expl_prob_min=0.0001, environment=frozen_lake)
-
-    deepqlearning = DeepQLearning(batch_size=5, update_interval=10, learning_rate=0.8, expl_decay_rate=0.01,
-                                  discount_factor=0.95, expl_prob_max=1,
-                                  expl_prob_min=0.0001, environment=frozen_lake)
-    mdp = MDP(frozen_lake.observation_space.n, frozen_lake.action_space.n)
-    valueiteration = ValueIteration(mdp=mdp, precision=0.01, expl_decay_rate=0.01, discount_factor=0.95,
-                                    expl_prob_max=1, expl_prob_min=0.0001)
-    agent = Agent(frozen_lake, deepqlearning)
+    agent = Agent(environment, qlearnstrat)
     agent.learn(2001)
-    Functions.plot_frozenlake_policy()
+    Functions.plot_frozenlake_policy(agent.strategy.policy)
     # endregion
-    '''
 
-    # #region cartpole (DQN)
-    # env_cp = gym.make("CartPole-v1")
-    # cart_pole = Environment(env_cp)
-    # deepqlearning = DeepQLearning(batch_size=5, update_interval=10, learning_rate=0.8, expl_decay_rate=0.01,
-    #                               discount_factor=0.95, expl_prob_max=1,
-    #                               expl_prob_min=0.0001, environment=cart_pole)
-    # agent = Agent(cart_pole, deepqlearning)
-    # agent.learn(2001)
-    # #endregion
+
+def run_cartpole():
+    # region cartpole (DQN)
+    env_cp = gym.make("CartPole-v0")
+    environment = Environment(env_cp)
+
+    deepqlearning = DeepQLearning(batch_size=32, update_interval=8, learning_rate=0.001, expl_decay_rate=0.995,
+                                  discount_factor=0.95, expl_prob_max=1,
+                                  expl_prob_min=0.0000001, environment=environment, max_experience_size=1000)
+    doubledeepqlearning = DoubleDeepQLearning(batch_size=32, update_interval=8, learning_rate=0.001,
+                                              expl_decay_rate=0.995,
+                                              discount_factor=0.95, expl_prob_max=1,
+                                              expl_prob_min=0.0000001, environment=environment, max_experience_size=1000)
+    agent = Agent(environment, doubledeepqlearning)
+    agent.learn(1001)
+    # endregion
+
+
+def main():
+    # run_frozenlake()
+    run_cartpole()
+
+
 
 if __name__ == "__main__":
     main()

@@ -17,13 +17,16 @@ from strategies.qlearnstrategy import QLearnStrategy
 class DeepQLearning(QLearnStrategy):
     def __init__(self, batch_size: int, update_interval: int,
                  learning_rate: float, discount_factor: float, expl_prob_max: float, expl_prob_min: float,
-                 expl_decay_rate: float, environment: Environment, max_experience_size: int = 2000):
+                 expl_decay_rate: float, environment: Environment, max_experience_size: int = None):
         super().__init__(learning_rate, discount_factor, expl_prob_max, expl_prob_min, expl_decay_rate, environment)
         self.model_1 = self.init_model(self.environment.observation_space_size, self.environment.action_space_size)
         self.model_2 = self.init_model(self.environment.observation_space_size, self.environment.action_space_size)
         self.batch_size = batch_size
         self.update_interval = update_interval
-        self.buffered_percepts_list = deque(maxlen=max_experience_size)
+        if max_experience_size is not None:
+            self.buffered_percepts_list = deque(maxlen=max_experience_size)
+        else:
+            self.buffered_percepts_list = deque(maxlen=batch_size)
         self.update_count = 0
 
     def improve(self, episode_count: int):
