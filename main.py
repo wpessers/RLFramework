@@ -36,7 +36,7 @@ def run_frozenlake():
                                               expl_prob_min=0.0000001, environment=environment)
 
     mdp = MDP(environment.observation_space_size, environment.action_space_size)
-    valueiteration = ValueIteration(mdp, 2, 0.95, 0.001, 0.0001, 0.01, environment)
+    valueiteration = ValueIteration(mdp = mdp, precision= 2, discount_factor=0.95, expl_prob_max=1, expl_prob_min=0.0001, expl_decay_rate=0.01, environment=environment, learning_rate=0.8)
 
     agent = Agent(environment, valueiteration)
     agent.learn(2001)
