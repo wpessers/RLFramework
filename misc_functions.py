@@ -18,9 +18,7 @@ class Functions:
     def plot_frozenlake_policy(policy):
         frozenlake = environments.frozen_lake.RewardingFrozenLakeEnv(map_name='4x4', is_slippery=True)
         preferred_actions_dict = dict(enumerate(np.argmax(policy, axis=1)))
-
         plotting.plot_solver_results(env=frozenlake, policy=preferred_actions_dict, color='red')
-
         plt.show()
 
     @staticmethod

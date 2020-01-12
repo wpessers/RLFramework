@@ -4,21 +4,20 @@ import time
 import numpy as np
 
 from numpy.random import choice
+
+from environment import Environment
 from mdp import MDP
 from misc_functions import Functions
 from percept import Percept
+from strategies.learningstrategy import LearningStrategy
 
 
-class ValueIteration:
+class ValueIteration(LearningStrategy):
     def __init__(self, mdp: MDP, precision: float, discount_factor: float, expl_prob_max: float, expl_prob_min: float,
-                 expl_decay_rate: float):
+                 expl_decay_rate: float, environment: Environment, learning_rate=0):
+        super().__init__(learning_rate, discount_factor, expl_prob_max, expl_prob_min, expl_decay_rate, environment)
         self.mdp = mdp
         self.precision = precision
-        self.discount_factor = discount_factor
-        self.expl_prob = expl_prob_max
-        self.expl_prob_max = expl_prob_max
-        self.expl_prob_min = expl_prob_min
-        self.expl_decay_rate = expl_decay_rate
         self.v = np.zeros(mdp.states_amount)
         self.policy = np.full((mdp.states_amount, mdp.actions_amount), 1 / mdp.actions_amount)
 
@@ -27,36 +26,20 @@ class ValueIteration:
         self.improve(episode_count)
 
     def evaluate(self, percept: Percept):
-        #print("EVALUATING")
         self.mdp.update(percept)
         max_reward = np.amax(self.mdp.Rtsa)
 
-        difference = math.inf
-        while difference > self.precision * max_reward * ((1 - self.discount_factor) / self.discount_factor):
-            difference = 0
-            state = 0
-            while state < self.mdp.states_amount:
+        delta = math.inf
+        while delta > self.precision * max_reward * ((1-self.discount_factor)/self.discount_factor):
+            delta = 0
+            for state in range(self.mdp.states_amount):
                 u = self.v[state]
-                print("\nPRE:")
-                print(self.v)
                 self.v[state] = np.amax(self.valuefunction(state))
-                print("POST:")
-                print(self.v)
-                difference = max(difference, abs(u - self.v[state]))
-                state += 1
-            print("\nDELTA:")
-            print(difference)
-            print("Precision_shizzz:")
-            print(self.precision * max_reward * ((1 - self.discount_factor) / self.discount_factor))
+                delta = max(delta, math.fabs(u - self.v[state]))
 
     def improve(self, episode_count: int):
-        #print("IMPROVING")
         state = 0
         while state < self.mdp.states_amount:
-            '''print("KEKISTAN:\n\t" + str(self.v[state]))
-            print(state)'''
-            if np.isnan(self.v[state]):
-                print(self.v)
             a_max = Functions.argmax_float(self.v[state])
             action = 0
             while action < self.mdp.actions_amount:
@@ -82,9 +65,11 @@ class ValueIteration:
                 )
                 next_state += 1
 
-            eu[action] = self.policy[state, action] + sum_value
+            eu[action] = self.policy[state, action] * sum_value
             action += 1
         return eu
 
+    '''
     def next_action(self, current_state: int):
         return choice(np.arange(0, self.mdp.actions_amount, 1), 1, p=self.policy[current_state])[0]
+    '''

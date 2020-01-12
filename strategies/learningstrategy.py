@@ -32,4 +32,4 @@ class LearningStrategy(ABC):
         pass
 
     def next_action(self, current_state: int):
-        return choice(np.arange(0, self._environment.action_space.n, 1), 1, p=self._policy[current_state])[0]
+        return choice(np.arange(0, self.environment.action_space.n, 1), 1, p=self.policy[current_state])[0]

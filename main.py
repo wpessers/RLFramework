@@ -35,9 +35,12 @@ def run_frozenlake():
                                               discount_factor=0.95, expl_prob_max=1,
                                               expl_prob_min=0.0000001, environment=environment)
 
-    agent = Agent(environment, qlearnstrat)
-    agent.learn(2001)
+    mdp = MDP(environment.observation_space_size, environment.action_space_size)
+    valueiteration = ValueIteration(mdp, 2, 0.95, 0.001, 0.0001, 0.01, environment)
 
+    agent = Agent(environment, valueiteration)
+    agent.learn(2001)
+    Functions.plot_frozenlake_policy(agent.strategy.policy)
     # endregion
 
 
