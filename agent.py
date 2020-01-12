@@ -27,11 +27,11 @@ class Agent:
         if 'CartPole' in self.environment.env.unwrapped.spec.id:
             while episode_count < n_episodes:
                 current_state = self.environment.reset()
-                self.environment.render()
+                #self.environment.render()
                 score_count = 0
                 percept = Percept(0, 0, 0, 0, False)
                 while not percept.done:
-                    self.environment.render()
+                    #self.environment.render()
                     action = self.strategy.next_action(current_state)
                     next_state, reward, done = self.environment.step(action)
                     percept = Percept(current_state, action, next_state, reward, done)

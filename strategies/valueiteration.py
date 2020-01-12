@@ -69,7 +69,5 @@ class ValueIteration(LearningStrategy):
             action += 1
         return eu
 
-    '''
     def next_action(self, current_state: int):
         return choice(np.arange(0, self.mdp.actions_amount, 1), 1, p=self.policy[current_state])[0]
-    '''

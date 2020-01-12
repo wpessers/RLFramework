@@ -40,7 +40,6 @@ def run_frozenlake():
 
     agent = Agent(environment, valueiteration)
     agent.learn(2001)
-    Functions.plot_frozenlake_policy(agent.strategy.policy)
     # endregion
 
 
