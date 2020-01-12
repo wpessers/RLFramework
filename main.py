@@ -27,9 +27,9 @@ def run_frozenlake():
                                            steps_amount=10)
     montecarlostrat = MonteCarloStrategy(learning_rate=0.8, expl_decay_rate=0.01, discount_factor=0.95, expl_prob_max=1,
                                          expl_prob_min=0.0001, environment=environment)
-    deepqlearning = DeepQLearning(batch_size=32, update_interval=8, learning_rate=0.01, expl_decay_rate=0.01,
-                                  discount_factor=0.2, expl_prob_max=1,
-                                  expl_prob_min=0.0001, environment=environment, max_experience_size=100)
+    deepqlearning = DeepQLearning(batch_size=10, update_interval=5, learning_rate=0.8, expl_decay_rate=0.001,
+                                  discount_factor=0.1, expl_prob_max=1,
+                                  expl_prob_min=0.0001, environment=environment, max_experience_size=20)
     doubledeepqlearning = DoubleDeepQLearning(batch_size=32, update_interval=8, learning_rate=0.001,
                                               expl_decay_rate=0.995,
                                               discount_factor=0.95, expl_prob_max=1,
@@ -37,7 +37,7 @@ def run_frozenlake():
 
     agent = Agent(environment, qlearnstrat)
     agent.learn(2001)
-    Functions.plot_frozenlake_policy(agent.strategy.policy)
+
     # endregion
 
 
@@ -59,8 +59,8 @@ def run_cartpole():
 
 
 def main():
-    # run_frozenlake()
-    run_cartpole()
+    run_frozenlake()
+    # run_cartpole()
 
 
 
