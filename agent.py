@@ -37,9 +37,8 @@ class Agent:
                     current_state = percept.next_state
                     score_count += percept.reward
 
-                # print("Agent died, got score of: " + str(score_count))
                 scores.append(score_count)
-                print(score_count)
+                print("Agent died, got score of: " + str(score_count))
                 if episode_count > 0 and episode_count % 10 == 0:
                     print("\nEpisode: " + str(episode_count))
                     print("Exploration probability: " + str(self.strategy.expl_prob))
@@ -62,37 +61,42 @@ class Agent:
                     percept = Percept(current_state, action, next_state, reward, done)
                     self.strategy.learn(percept, episode_count)
                     current_state = percept.next_state
-                    Functions.plot_frozenlake_policy(self.strategy.policy)
 
                     if percept.reward > 0:
                         finished_count_100eps += 1
 
                 if episode_count > 0 and episode_count % 100 == 0:
-                    print("\n\nEpisode: " + str(episode_count))
-                    print("Exploration probability: " + str(self.strategy.expl_prob))
-                    print("Policy:\n")
-                    if isinstance(self.strategy, DeepQLearning):
-                        for state in range(self.environment.observation_space_size):
-                            print(self.strategy.model_1.predict(
-                                to_categorical(state, num_classes=self.environment.observation_space_size).reshape(
-                                    (1, self.environment.observation_space_size))).squeeze())
-                    else:
-                        print(self.strategy.policy)
-                    print("Amount of times the goal was reached last 100 episodes:\n" + str(finished_count_100eps))
+                    self.print_stats_last_episodes(episode_count, finished_count_100eps)
                     x_vals.append(episode_count)
                     y_vals.append(finished_count_100eps)
                     finished_count_100eps = 0
 
                 episode_count += 1
 
-            if isinstance(self.strategy, DeepQLearning):
-                q_table = np.empty([self.environment.observation_space_size, self.environment.action_space_size])
-                for state in range(self.environment.observation_space_size):
-                    q_table[state] = self.strategy.model_1.predict(
-                        to_categorical(state, num_classes=self.environment.observation_space_size).reshape(
-                            (1, self.environment.observation_space_size)))
-                Functions.plot_frozenlake_policy(q_table)
-            else:
-                Functions.plot_frozenlake_policy(self.strategy.policy)
+            self.print_policy()
 
             Functions.plot_success_rate(x_vals, y_vals)
+
+    def print_stats_last_episodes(self, episode_count, finished_count_100eps):
+        print("\n\nEpisode: " + str(episode_count))
+        print("Exploration probability: " + str(self.strategy.expl_prob))
+        print("Policy:\n")
+        if isinstance(self.strategy, DeepQLearning):
+            for state in range(self.environment.observation_space_size):
+                print(self.strategy.model_1.predict(
+                    to_categorical(state, num_classes=self.environment.observation_space_size).reshape(
+                        (1, self.environment.observation_space_size))).squeeze())
+        else:
+            print(self.strategy.policy)
+        print("Amount of times the goal was reached last 100 episodes:\n" + str(finished_count_100eps))
+
+    def print_policy(self):
+        if isinstance(self.strategy, DeepQLearning):
+            q_table = np.empty([self.environment.observation_space_size, self.environment.action_space_size])
+            for state in range(self.environment.observation_space_size):
+                q_table[state] = self.strategy.model_1.predict(
+                    to_categorical(state, num_classes=self.environment.observation_space_size).reshape(
+                        (1, self.environment.observation_space_size)))
+            Functions.plot_frozenlake_policy(q_table)
+        else:
+            Functions.plot_frozenlake_policy(self.strategy.policy)
