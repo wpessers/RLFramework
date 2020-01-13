@@ -1,11 +1,8 @@
 import gym
-import numpy as np
-import matplotlib.pyplot as plt
 
 from agent import Agent
 from environment import Environment
 from mdp.MDP import MDP
-from misc_functions import Functions
 from strategies.deepqlearning import DeepQLearning
 from strategies.doubledeepqlearning import DoubleDeepQLearning
 from strategies.montecarlostrategy import MonteCarloStrategy

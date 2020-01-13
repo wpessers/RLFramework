@@ -1,8 +1,6 @@
 import gym
 from gym.spaces import Discrete
 
-from percept import Percept
-
 
 class Environment(gym.Wrapper):
     def __init__(self, environment: gym.Wrapper):

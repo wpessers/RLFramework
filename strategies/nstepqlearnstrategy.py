@@ -1,5 +1,3 @@
-import numpy as np
-
 from environment import Environment
 from percept import Percept
 from strategies.qlearnstrategy import QLearnStrategy
