@@ -34,21 +34,21 @@ class ValueIteration(LearningStrategy):
 
     def improve(self, episode_count: int):
         for state in range(self.mdp.states_amount):
-            actions = np.empty(self.mdp.actions_amount)
+            actions_values = np.empty(self.mdp.actions_amount)
             for action in range(self.mdp.actions_amount):
                 sum_value = 0
                 for next_state in range(self.mdp.states_amount):
                     sum_value += self.mdp.Ptsa[next_state, state, action] * (
                             self.mdp.Rtsa[next_state, state, action] + self.discount_factor * self.v[next_state]
                     )
-                actions[action] = sum_value
-            a_max = Functions.argmax_float(actions)
+                actions_values[action] = sum_value
+
+            a_max = Functions.argmax_float(actions_values)
             for action in range(self.mdp.actions_amount):
                 if action == a_max:
                     self.policy[state, action] = 1 - self.expl_prob + (self.expl_prob / self.mdp.actions_amount)
                 else:
                     self.policy[state, action] = self.expl_prob / self.mdp.actions_amount
-
 
         self.expl_prob = self.expl_prob_min + \
                          (self.expl_prob_max - self.expl_prob_min) * math.e ** (- self.expl_decay_rate * episode_count)
@@ -62,6 +62,7 @@ class ValueIteration(LearningStrategy):
                         self.mdp.Rtsa[next_state, state, action] + self.discount_factor * self.v[next_state]
                 )
             eu[action] = self.policy[state, action] * sum_value
+
         return eu
 
     def next_action(self, current_state: int):

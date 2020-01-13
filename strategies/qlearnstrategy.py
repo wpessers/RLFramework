@@ -22,17 +22,13 @@ class QLearnStrategy(LearningStrategy):
             )
 
     def improve(self, episode_count: int):
-        state = 0
-        while state < self.environment.observation_space.n:
+        for state in range(self.environment.observation_space.n):
             a_max = Functions.argmax_float(self.qsa[state])
-            action = 0
-            while action < self.environment.action_space.n:
+            for action in range(self.environment.action_space.n):
                 if action == a_max:
                     self.policy[state, action] = 1 - self.expl_prob + (self.expl_prob / self.environment.action_space.n)
                 else:
                     self.policy[state, action] = self.expl_prob / self.environment.action_space.n
-                action += 1
-            state += 1
 
         self.expl_prob = self.expl_prob_min + \
                          (self.expl_prob_max - self.expl_prob_min) * math.e ** (- self.expl_decay_rate * episode_count)
